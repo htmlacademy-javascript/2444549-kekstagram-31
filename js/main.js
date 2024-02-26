@@ -1,3 +1,4 @@
+//Вызовы функций для генерации случайных заданных значений из диапазона//
 const generatePhotoId = createRandomIdFromRangeGenerator(1, 25);
 const generateURL = createRandomIdFromRangeGenerator(1, 25);
 const generateLikes = createRandomIdFromRangeGenerator(15, 300);

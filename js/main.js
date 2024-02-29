@@ -1,4 +1,46 @@
+//импортируем функции//
+import { createRandomIdFromRangeGenerator } from './util.js';
+import { getRandomArrayElement } from '.util.js';
+
+//константы//
 const PUBLISHED_IMG_COUNT = 25;
+
+const PHOTO_ID = {
+  min: 1,
+  max: 25,
+};
+
+const URL_ID = {
+  min: 1,
+  max: 25,
+};
+
+const LIKES = {
+  min: 15,
+  max: 300,
+};
+
+const COMMENTATOR_ID = {
+  min: 1,
+  max: 999,
+};
+
+const AVATAR = {
+  min: 1,
+  max: 6,
+};
+
+const COMMENTS_AMOUNT = {
+  min: 0,
+  max: 30,
+};
+
+const photoId = createRandomIdFromRangeGenerator(PHOTO_ID.min, PHOTO_ID.max);
+const url = createRandomIdFromRangeGenerator(URL_ID.min, URL_ID.max);
+const Likes = createRandomIdFromRangeGenerator(LIKES.min, LIKES.max);
+const CommentatorId = createRandomIdFromRangeGenerator(COMMENTATOR_ID.min, COMMENTATOR_ID.max);
+const Avatar = createRandomIdFromRangeGenerator(AVATAR.min, AVATAR.max);
+const amountOfComments = createRandomIdFromRangeGenerator(COMMENTS_AMOUNT.min, COMMENTS_AMOUNT.max);
 
 //Массив имен//
 const NAMES = [
@@ -30,53 +72,6 @@ const DEFINITION = [
   'Классный вид!',
 ];
 
-//Получаем случайное, целое, неповторяющееся число//
-const createRandomIdFromRangeGenerator = (min, max) => {
-  const previousValues = [];
-
-  const getRandomInteger = (a, b) => {
-    const lower = Math.ceil(Math.min(a, b));
-    const upper = Math.floor(Math.max(a, b));
-    const result = Math.random() * (upper - lower + 1) + lower;
-    return Math.floor(result);
-  };
-  return function () {
-    let currentValue = getRandomInteger(min, max);
-    if (previousValues.length >= (max - min + 1)) {
-      return null;
-    }
-    while (previousValues.includes(currentValue)) {
-      currentValue = getRandomInteger(min, max);
-    }
-    previousValues.push(currentValue);
-    return currentValue;
-  };
-};
-
-//Вызовы функций для генерации случайных заданных значений из диапазона//
-const minPhotoId = 1;
-const maxPhotoId = 25;
-const generatePhotoId = createRandomIdFromRangeGenerator(minPhotoId, maxPhotoId);
-const minUrl = 1;
-const maxUrl = 25;
-const generateURL = createRandomIdFromRangeGenerator(minUrl, maxUrl);
-const minLikes = 15;
-const maxLikes = 300;
-const generateLikes = createRandomIdFromRangeGenerator(minLikes, maxLikes);
-const minCommentatorId = 1;
-const maxCommentatorId = 999;
-const generateCommentatorId = createRandomIdFromRangeGenerator(minCommentatorId, maxCommentatorId);
-const minAvatar = 1;
-const maxAvatar = 6;
-const generateAvatar = createRandomIdFromRangeGenerator(minAvatar, maxAvatar);
-const minComments = 0;
-const maxComments = 30;
-const amountOfComments = createRandomIdFromRangeGenerator(minComments, maxComments);
-
-
-//Получаем случайный элемент массива//
-const getRandomArrayElement = (elements) => elements[createRandomIdFromRangeGenerator(0, elements.length - 1)];
-
 //Получаем случайное число комментариев под фото//
 const getAmountOfComments = () => {
   for (let i = 0; i <= amountOfComments(); i++) {
@@ -86,21 +81,21 @@ const getAmountOfComments = () => {
 
 //Получаем случайного комментатора с аватаром и именем//
 const getCommentator = () => ({
-  id: generateCommentatorId(),
-  avatar: `img/avatar-${generateAvatar()}.svg`,
+  id: CommentatorId(),
+  avatar: `img/avatar-${Avatar()}.svg`,
   message: getAmountOfComments(),
   name: getRandomArrayElement(NAMES),
 });
 
 //Получаем фото с описанием, лайками, комментариями//
 const createPhotoDescription = () => ({
-  id: generatePhotoId(),
-  url: `photos/${generateURL()}.jpg`,
+  id: photoId(),
+  url: `photos/${url()}.jpg`,
   description: getRandomArrayElement(DEFINITION),
-  likes: generateLikes(),
+  likes: Likes(),
   comments: Array.from({length: amountOfComments()}), getCommentator,
 });
 
-const PhotoDescription = Array.from({length: PUBLISHED_IMG_COUNT}, createPhotoDescription);
+const photoDescription = Array.from({length: PUBLISHED_IMG_COUNT}, createPhotoDescription);
 
-PhotoDescription();
+photoDescription();

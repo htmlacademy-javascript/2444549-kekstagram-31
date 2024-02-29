@@ -1,5 +1,5 @@
 //импортируем функции//
-import { createRandomIdFromRangeGenerator } from './util.js';
+import { createRandomIdFromRangeGenerator } from './data.js';
 import { getRandomArrayElement } from '.util.js';
 
 //константы//

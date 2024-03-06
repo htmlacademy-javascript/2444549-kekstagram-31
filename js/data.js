@@ -1,4 +1,4 @@
-import { getRandomArrayElement, createRandomIdFromRangeGenerator } from './util.js';
+import { getRandomInteger, getRandom } from './util.js';
 
 //константы//
 const PUBLISHED_IMG_COUNT = 25;
@@ -33,13 +33,6 @@ const COMMENTS_AMOUNT = {
   max: 30,
 };
 
-const photoId = createRandomIdFromRangeGenerator(PHOTO_ID.min, PHOTO_ID.max);
-const getUrl = createRandomIdFromRangeGenerator(URL_ID.min, URL_ID.max);
-const likes = createRandomIdFromRangeGenerator(LIKES.min, LIKES.max);
-const CommentatorId = createRandomIdFromRangeGenerator(COMMENTATOR_ID.min, COMMENTATOR_ID.max);
-const Avatar = createRandomIdFromRangeGenerator(AVATAR.min, AVATAR.max);
-const amountOfComments = createRandomIdFromRangeGenerator(COMMENTS_AMOUNT.min, COMMENTS_AMOUNT.max);
-
 //Массив имен//
 const NAMES = [
   'Иван',
@@ -69,31 +62,34 @@ const DEFINITION = [
   'Отличный ракурс!',
   'Классный вид!',
 ];
-//Получаем случайное число комментариев под фото//
-const getAmountOfComments = () => {
-  for (let i = 0; i <= amountOfComments(); i++) {
-    getRandomArrayElement(COMMENTS);
+
+const generateId = getRandom(PHOTO_ID.min, PHOTO_ID.max);
+const generatePhotoId = getRandom(URL_ID.min, URL_ID.max);
+const generateIdComments = getRandom(COMMENTATOR_ID.min, COMMENTATOR_ID.max);
+const generateGetAccess = (el) => el[getRandomInteger(0, el.length - 1)];
+
+const getCommentator = () => {
+  const array = [];
+  for (let i = 0; i < getRandomInteger(COMMENTS_AMOUNT.min, COMMENTS_AMOUNT.max); i++) {
+    array.push({
+      id: generateIdComments(),
+      avatar: `img/avatar-${getRandomInteger(AVATAR.min, AVATAR.max)}.svg`,
+      message: generateGetAccess(COMMENTS),
+      name: generateGetAccess(NAMES)
+    });
   }
+  return array;
 };
-//Получаем случайного комментатора с аватаром и именем//
-const getCommentator = () => ({
-  id: CommentatorId(),
-  avatar: `img/avatar-${Avatar()}.svg`,
-  message: getAmountOfComments(),
-  name: getRandomArrayElement(NAMES),
-});
-//Получаем фото с описанием, лайками, комментариями//
-const createPhotoDescription = () => ({
-  id: photoId(),
-  url: `/photos/${getUrl()}.jpg`,
-  description: getRandomArrayElement(DEFINITION),
-  likes: likes(),
-  comments: Array.from({length: amountOfComments()}), getCommentator,
+
+const getPhotoDescription = () => ({
+  id: generateId(),
+  url: `photos/${generatePhotoId()}.jpg`,
+  description: generateGetAccess(DEFINITION),
+  likes: getRandomInteger(LIKES.min, LIKES.max),
+  comments: getCommentator()
 });
 
-const photoDescription = () => Array.from({length: PUBLISHED_IMG_COUNT}, createPhotoDescription);
+const getThumbnail = () => Array.from({ length: PUBLISHED_IMG_COUNT }, getPhotoDescription);
 
-photoDescription();
-
-export { photoDescription };
+export { getThumbnail };
 

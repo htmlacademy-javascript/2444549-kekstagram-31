@@ -1,11 +1,11 @@
-import { photoDescription } from './data.js';
+import { getThumbnail } from './data.js';
 
 const pictures = document.querySelector('.pictures');
 const template = document.querySelector('#picture').content;
 const templatePicture = template.querySelector('.picture');
 
 
-const photoData = photoDescription();
+const photoData = getThumbnail();
 const photoDataFragment = document.createDocumentFragment();
 
 photoData.forEach(({url, description, likes, comments}) => {

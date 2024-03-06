@@ -1,6 +1,25 @@
-import { createRandomIdFromRangeGenerator } from './data.js';
+function getRandomInteger(min, max) {
+  const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
+  const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
+  const result = Math.random() * (upper - lower + 1) + lower;
 
-//Получаем случайный элемент массива//
-const getRandomArrayElement = (elements) => elements[createRandomIdFromRangeGenerator(0, elements.length - 1)];
+  return Math.floor(result);
+}
 
-export { getRandomArrayElement };
+const getRandom = (min, max) => {
+  const array = [];
+  return function () {
+    let number = getRandomInteger(min, max);
+    if (array.length >= max - min + 1) {
+      return null;
+    }
+    while (array.includes(number)) {
+      number = getRandomInteger(min, max);
+    }
+    array.push(number);
+    return number;
+  };
+};
+
+export {getRandomInteger, getRandom, };
+

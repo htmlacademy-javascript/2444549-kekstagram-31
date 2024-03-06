@@ -1,4 +1,4 @@
-
+/*
 function getStringComparison (string, maxLength) {
   return (string.length <= maxLength);
 }
@@ -26,7 +26,7 @@ function isNumber (string) {
 }
 isNumber();
 
-/*
+
 function isNumber (string) {
   let checkString = '';
   for (let i = 0; i <= string.length - 1; i++) {

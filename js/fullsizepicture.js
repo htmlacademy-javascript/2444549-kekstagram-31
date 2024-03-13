@@ -12,6 +12,7 @@ const previewCommentsCount = preview.querySelector('.social__comment-shown-count
 const previewCommentsTotal = preview.querySelector('.social__comment-total-count');
 const previewCaption = preview.querySelector('.social__caption');
 const loadCommentsButton = preview.querySelector('.comments-loader');
+const overlay = preview.querySelector('.big-pictureOverlay');
 const pictureDataFragment = document.createDocumentFragment();
 const maxComments = 5;
 
@@ -79,7 +80,7 @@ pictures.addEventListener('click', (evt) => {
       createRandom(comments, index, limit);
     };
     if (+(evt.target.closest('.picture').dataset.id) === id) {
-      previewImage.children[0].src = url;
+      previewImage.src = url;
       previewLikes.textContent = likes;
       previewCaption.textContent = description;
       previewCommentsTotal.textContent = comments.length;
@@ -105,3 +106,10 @@ previewClose.addEventListener('click', () => {
   loadCommentsButton.removeEventListener('click');
 });
 
+document.addEventListener('click', (el) => {
+  const click = el.composedPath().includes(overlay);
+  //console.log(click);
+  if (!click) {
+    overlay.style.display = 'none';
+  }
+});

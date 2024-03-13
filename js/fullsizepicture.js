@@ -12,7 +12,7 @@ const previewCommentsCount = preview.querySelector('.social__comment-shown-count
 const previewCommentsTotal = preview.querySelector('.social__comment-total-count');
 const previewCaption = preview.querySelector('.social__caption');
 const loadCommentsButton = preview.querySelector('.comments-loader');
-const overlay = preview.querySelector('.big-picture__preview');
+//const overlay = preview.querySelector('.big-picture__preview');
 const pictureDataFragment = document.createDocumentFragment();
 const maxComments = 5;
 

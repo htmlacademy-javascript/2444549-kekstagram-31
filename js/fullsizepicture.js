@@ -12,7 +12,7 @@ const previewCommentsCount = preview.querySelector('.social__comment-shown-count
 const previewCommentsTotal = preview.querySelector('.social__comment-total-count');
 const previewCaption = preview.querySelector('.social__caption');
 const loadCommentsButton = preview.querySelector('.comments-loader');
-const overlay = preview.querySelector('.big-pictureOverlay');
+const overlay = preview.querySelector('.big-picture__preview');
 const pictureDataFragment = document.createDocumentFragment();
 const maxComments = 5;
 
@@ -106,10 +106,11 @@ previewClose.addEventListener('click', () => {
   loadCommentsButton.removeEventListener('click');
 });
 
-document.addEventListener('click', (el) => {
+/*overlay.addEventListener('click', (el) => {
   const click = el.composedPath().includes(overlay);
-  //console.log(click);
-  if (!click) {
+  console.log(click);
+  if (click) {
     overlay.style.display = 'none';
   }
 });
+*/

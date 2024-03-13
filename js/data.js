@@ -1,12 +1,8 @@
 import { getRandomInteger, getRandom } from './util.js';
+let id = 0;
 
 //константы//
 const PUBLISHED_IMG_COUNT = 25;
-
-const PHOTO_ID = {
-  min: 1,
-  max: 25,
-};
 
 const URL_ID = {
   min: 1,
@@ -63,7 +59,6 @@ const DEFINITION = [
   'Классный вид!',
 ];
 
-const generateId = getRandom(PHOTO_ID.min, PHOTO_ID.max);
 const generatePhotoId = getRandom(URL_ID.min, URL_ID.max);
 const generateIdComments = getRandom(COMMENTATOR_ID.min, COMMENTATOR_ID.max);
 const generateGetAccess = (el) => el[getRandomInteger(0, el.length - 1)];
@@ -82,7 +77,7 @@ const getCommentator = () => {
 };
 
 const getPhotoDescription = () => ({
-  id: generateId(),
+  id: id++,
   url: `photos/${generatePhotoId()}.jpg`,
   description: generateGetAccess(DEFINITION),
   likes: getRandomInteger(LIKES.min, LIKES.max),
@@ -91,5 +86,4 @@ const getPhotoDescription = () => ({
 
 const getThumbnail = () => Array.from({ length: PUBLISHED_IMG_COUNT }, getPhotoDescription);
 
-export { getThumbnail };
-
+export { getThumbnail, getPhotoDescription };

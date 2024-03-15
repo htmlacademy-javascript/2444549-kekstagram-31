@@ -12,9 +12,9 @@ const previewCommentsCount = preview.querySelector('.social__comment-shown-count
 const previewCommentsTotal = preview.querySelector('.social__comment-total-count');
 const previewCaption = preview.querySelector('.social__caption');
 const loadCommentsButton = preview.querySelector('.comments-loader');
-//const overlay = preview.querySelector('.big-picture__preview');
+//const overlay = document.querySelector('.overlay');
 const pictureDataFragment = document.createDocumentFragment();
-const maxComments = 5;
+const MAX_COMMENTS = 5;
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -30,6 +30,7 @@ const openPreview = () => {
 
 const closePreview = () => {
   preview.classList.add('hidden');
+  bodyElement.style.overflow = 'visible';
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
@@ -75,8 +76,8 @@ pictures.addEventListener('click', (evt) => {
 
   photoData.forEach(({ id, url, likes, description, comments }) => {
     const onClickLoadButton = () => {
-      index += maxComments;
-      limit += maxComments;
+      index += MAX_COMMENTS;
+      limit += MAX_COMMENTS;
       createRandom(comments, index, limit);
     };
     if (+(evt.target.closest('.picture').dataset.id) === id) {
@@ -85,32 +86,24 @@ pictures.addEventListener('click', (evt) => {
       previewCaption.textContent = description;
       previewCommentsTotal.textContent = comments.length;
       bodyElement.classList.add('modal-open');
+      bodyElement.classList.remove('.overflow');
+      bodyElement.style.overflow = 'visible';
       previewCommentsBlock.innerHTML = '';
       createRandom(comments, index, limit);
       openPreview();
-      if (comments.length >= maxComments) {
-        loadCommentsButton.addEventListener('click', () => {
-          loadCommentsButton.classList.remove('hidden');
-          loadCommentsButton.addEventListener('click', onClickLoadButton);
-          createRandom(comments, index, limit);
-        });
+      if (comments.length > MAX_COMMENTS) {
+        loadCommentsButton.addEventListener('click', onClickLoadButton);
+        loadCommentsButton.classList.remove('hidden');
       } else {
         loadCommentsButton.classList.add('hidden');
       }
     }
+
+    previewClose.addEventListener('click', () => {
+      closePreview();
+      loadCommentsButton.removeEventListener('click', onClickLoadButton);
+    });
   });
 });
 
-previewClose.addEventListener('click', () => {
-  closePreview();
-  loadCommentsButton.removeEventListener('click');
-});
-
-/*overlay.addEventListener('click', (el) => {
-  const click = el.composedPath().includes(overlay);
-  console.log(click);
-  if (click) {
-    overlay.style.display = 'none';
-  }
-});
-*/
+//overlay.addEventListener('click', closePreview);

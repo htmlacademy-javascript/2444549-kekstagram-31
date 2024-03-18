@@ -45,9 +45,22 @@ const validateHashtagName = (arr) => {
 const validateHashtagAmount = () => hashtag.value.trim('').split().length <= HASHTAG_LIMIT;
 
 const validateHashtagSimilar = (arr) => {
-  const uniqueHashtags = new Set(arr);
-  return arr.length === uniqueHashtags.size;
+  arr = hashtag.value.trim('').split();
+  for (let i = 0; i < arr.length; i++) {
+    const checkTag = arr[i];
+    let count = 0;
+    for(let k = 0; k < arr.length; k++) {
+      if (checkTag === arr[k]) {
+        count++;
+      }
+    }
+    if (count > 1) {
+      return false;
+    }
+  }
+  return true;
 };
+
 
 const validateCommentaryLimit = () => textComment.length <= COMMENT_LIMIT;
 
@@ -92,21 +105,8 @@ form.addEventListener('submit', (evt) => {
   }
 });
 
-
 /*const validateHashtagSimilar = (arr) => {
-  arr = hashtag.value.trim('').split();
-  for (let i = 0; i < arr.length; i++) {
-    const checkTag = arr[i];
-    let count = 0;
-    for(let k = 0; k < arr.length; k++) {
-      if (checkTag === arr[k]) {
-        count++;
-      }
-    }
-    if (count > 1) {
-      return false;
-    }
-  }
-  return true;
+  const uniqueHashtags = new Set(arr);
+  return arr.length === uniqueHashtags.size;
 };
 */

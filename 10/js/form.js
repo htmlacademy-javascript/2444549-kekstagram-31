@@ -45,22 +45,11 @@ const validateHashtagName = (arr) => {
 const validateHashtagAmount = () => hashtag.value.trim('').split().length <= HASHTAG_LIMIT;
 
 const validateHashtagSimilar = (arr) => {
-  arr = hashtag.value.trim('').split();
-  for (let i = 0; i < arr.length; i++) {
-    const checkTag = arr[i];
-    let count = 0;
-    for(let k = 0; k < arr.length; k++) {
-      if (checkTag === arr[k]) {
-        count++;
-      }
-    }
-    if (count > 1) {
-      return false;
-    }
-  }
-  return true;
-};
+  const hashtagArr = arr.toLowerCase().trim().split(' ');
+  const uniqueHashtags = [...new Set(hashtagArr)];
 
+  return hashtagArr.length === uniqueHashtags.length;
+};
 
 const validateCommentaryLimit = () => textComment.length <= COMMENT_LIMIT;
 

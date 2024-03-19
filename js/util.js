@@ -25,4 +25,14 @@ const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const isEnterKey = (evt) => evt.key === 'Enter';
 
-export {getRandomInteger, getRandom, isEnterKey, isEscapeKey };
+const openPreview = (preview, onDocumentKeydown) => {
+  preview.classList.remove('hidden');
+  document.addEventListener('keydown', onDocumentKeydown);
+};
+
+const closePreview = (preview, onDocumentKeydown) => {
+  preview.classList.add('hidden');
+  document.removeEventListener('keydown', onDocumentKeydown);
+};
+
+export { getRandomInteger, getRandom, isEnterKey, isEscapeKey, openPreview, closePreview };

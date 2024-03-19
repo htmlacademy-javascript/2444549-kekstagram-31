@@ -1,4 +1,4 @@
-import { isEscapeKey } from './util.js';
+import { isEscapeKey, openPreview, closePreview } from './util.js';
 import { pictures, photoData } from './thumbnails.js';
 
 const bodyElement = document.querySelector('body');
@@ -21,17 +21,6 @@ const onDocumentKeydown = (evt) => {
     evt.preventDefault();
     preview.classList.add('hidden');
   }
-};
-
-const openPreview = () => {
-  preview.classList.remove('hidden');
-  document.addEventListener('keydown', onDocumentKeydown);
-};
-
-const closePreview = () => {
-  preview.classList.add('hidden');
-  bodyElement.style.overflow = 'visible';
-  document.removeEventListener('keydown', onDocumentKeydown);
 };
 
 const createComment = (comment) => {
@@ -80,6 +69,11 @@ pictures.addEventListener('click', (evt) => {
       limit += MAX_COMMENTS;
       createRandom(comments, index, limit);
     };
+    const modalClose = () => {
+      closePreview(preview, onDocumentKeydown);
+      bodyElement.classList.remove('modal-open');
+      loadCommentsButton.removeEventListener('click', onClickLoadButton);
+    };
     if (+(evt.target.closest('.picture').dataset.id) === id) {
       previewImage.src = url;
       previewLikes.textContent = likes;
@@ -90,7 +84,7 @@ pictures.addEventListener('click', (evt) => {
       bodyElement.style.overflow = 'visible';
       previewCommentsBlock.innerHTML = '';
       createRandom(comments, index, limit);
-      openPreview();
+      openPreview(preview, onDocumentKeydown);
       if (comments.length > MAX_COMMENTS) {
         loadCommentsButton.addEventListener('click', onClickLoadButton);
         loadCommentsButton.classList.remove('hidden');
@@ -99,11 +93,11 @@ pictures.addEventListener('click', (evt) => {
       }
     }
 
-    previewClose.addEventListener('click', () => {
-      closePreview();
-      loadCommentsButton.removeEventListener('click', onClickLoadButton);
-    });
+    previewClose.addEventListener('click', modalClose);
+    //overlay.addEventListener('click', closePreview);
   });
 });
 
-//overlay.addEventListener('click', closePreview);
+preview.addEventListener('click', (evt) => {
+  evt.stopPropagation();
+});

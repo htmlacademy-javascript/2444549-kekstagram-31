@@ -7,7 +7,7 @@ const form = document.querySelector('.img-upload__form');
 const uploadButtonClose = imgUploadPopup.querySelector('.img-upload__cancel');
 const hashtag = document.querySelector('.text__hashtags');
 const textComment = imgUploadPopup.querySelector('.text__description');
-const regex = /^#[a-zа-яё0-9]{1,19}$/i;
+const REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 const HASHTAG_LIMIT = 5;
 const COMMENT_LIMIT = 140;
 
@@ -30,12 +30,12 @@ const onDocumentKeydown = (evt) => {
 };
 
 const validateHashtagName = (arr) => {
-  arr = hashtag.value.trim('').split();
+  arr = hashtag.value.trim().split(' ');
   if (hashtag.value === '') {
     return true;
   }
-  for (let i = 0; i <= arr.length; i++) {
-    if (!regex.test(arr[i])) {
+  for (let i = 0; i < arr.length; i++) {
+    if (! REGEX.test(arr[i])){
       return false;
     }
   }
@@ -47,11 +47,10 @@ const validateHashtagAmount = () => hashtag.value.trim('').split().length <= HAS
 const validateHashtagSimilar = (arr) => {
   const hashtagArr = arr.toLowerCase().trim().split(' ');
   const uniqueHashtags = [...new Set(hashtagArr)];
-
   return hashtagArr.length === uniqueHashtags.length;
 };
 
-const validateCommentaryLimit = () => textComment.length <= COMMENT_LIMIT;
+const validateCommentaryLimit = () => textComment.value.length <= COMMENT_LIMIT;
 
 uploadButton.addEventListener('change', () => {
   openPreview(imgUploadPopup, onDocumentKeydown);
@@ -94,8 +93,3 @@ form.addEventListener('submit', (evt) => {
   }
 });
 
-/*const validateHashtagSimilar = (arr) => {
-  const uniqueHashtags = new Set(arr);
-  return arr.length === uniqueHashtags.size;
-};
-*/

@@ -12,7 +12,7 @@ const changeScale = () => {
 };
 
 scaleSmallerBtn.addEventListener('click', () => {
-  if (number > 0) {
+  if (number > MIN_LIMIT) {
     scaleBiggerBtn.disabled = false;
   }
   if (number === MIN_LIMIT) {
@@ -26,7 +26,7 @@ scaleSmallerBtn.addEventListener('click', () => {
 });
 
 scaleBiggerBtn.addEventListener('click', () => {
-  if (number < 100) {
+  if (number < MAX_LIMIT) {
     scaleSmallerBtn.disabled = false;
   }
   if (number === MAX_LIMIT) {

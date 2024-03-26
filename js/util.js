@@ -23,16 +23,14 @@ const getRandom = (min, max) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const isEnterKey = (evt) => evt.key === 'Enter';
-
-const openPreview = (preview, onDocumentKeydown) => {
-  preview.classList.remove('hidden');
+const openPopup = (popup, onDocumentKeydown) => {
+  popup.classList.remove('hidden');
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-const closePreview = (preview, onDocumentKeydown) => {
-  preview.classList.add('hidden');
+const closePopup = (popup, onDocumentKeydown) => {
+  popup.classList.add('hidden');
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
-export { getRandomInteger, getRandom, isEnterKey, isEscapeKey, openPreview, closePreview };
+export { getRandomInteger, getRandom, isEscapeKey, openPopup, closePopup };

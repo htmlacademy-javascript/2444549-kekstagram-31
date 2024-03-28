@@ -6,26 +6,25 @@ import { getData } from './api.js';
 const LIMIT_OF_COMMENT = 5;
 const body = document.querySelector('body');
 const bigPicture = document.querySelector('.big-picture');
-const popup = document.querySelector('.big-picture__preview');
-const image = document.querySelector('.big-picture__img');
-const likesCount = document.querySelector('.likes-count');
+const popup = bigPicture.querySelector('.big-picture__preview');
+const image = bigPicture.querySelector('.big-picture__img');
+const likesCount = bigPicture.querySelector('.likes-count');
 const overlay = document.querySelector('.overlay');
 const imgUpload = document.querySelector('.img-upload');
-const commentShownCount = document.querySelector('.social__comment-shown-count');
-const commentTotalCount = document.querySelector('.social__comment-total-count');
-const descriptionPhoto = document.querySelector('.social__caption');
-const socialComments = document.querySelector('.social__comments');
-const closeButton = document.querySelector('.big-picture__cancel');
-const loadMoreButton = document.querySelector('.comments-loader');
+const commentShownCount = bigPicture.querySelector('.social__comment-shown-count');
+const commentTotalCount = bigPicture.querySelector('.social__comment-total-count');
+const descriptionPhoto = bigPicture.querySelector('.social__caption');
+const socialComments = bigPicture.querySelector('.social__comments');
+const closeButton = bigPicture.querySelector('.big-picture__cancel');
+const loadMoreButton = bigPicture.querySelector('.comments-loader');
 const pictureDataFragment = document.createDocumentFragment();
-
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     bigPicture.classList.add('hidden');
   }
 };
-// Создает комментарий
+
 const createElement = (comment) => {
   const element = document.createElement('li');
   const newImage = document.createElement('img');
@@ -42,7 +41,7 @@ const createElement = (comment) => {
   element.append(text);
   pictureDataFragment.append(element);
 };
-// Создает список комментариев
+
 const createComments = () => {
   let count = 0;
   return function (comments, index, limit) {
@@ -60,13 +59,12 @@ const createComments = () => {
     }
   };
 };
-//Событие для открытия экрана
+
 pictures.addEventListener('click', (evt) => {
   let index = 0;
   let limit = 4;
   const createElements = createComments();
 
-  //Перебирает массив объектов с данными
   const getFullscreen = (photoData) => {
     photoData.forEach(({ id, url, likes, description, comments }) => {
       const onLoadButtonClick = () => {

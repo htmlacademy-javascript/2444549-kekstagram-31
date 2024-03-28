@@ -1,10 +1,10 @@
-function getRandomInteger(min, max) {
+const getRandomInteger = (min, max) => {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
   const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
   const result = Math.random() * (upper - lower + 1) + lower;
 
   return Math.floor(result);
-}
+};
 
 const getRandom = (min, max) => {
   const array = [];
@@ -21,6 +21,8 @@ const getRandom = (min, max) => {
   };
 };
 
+const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
+
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const openPopup = (popup, onDocumentKeydown) => {
@@ -33,4 +35,12 @@ const closePopup = (popup, onDocumentKeydown) => {
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
-export { getRandomInteger, getRandom, isEscapeKey, openPopup, closePopup };
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+export { getRandomInteger, getRandom, isEscapeKey, openPopup, closePopup, getRandomArrayElement, debounce };

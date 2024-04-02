@@ -94,16 +94,15 @@ pictures.addEventListener('click', (evt) => {
         }
       }
       closeButton.addEventListener('click', modalClose);
+      document.addEventListener('keydown', modalClose);
       overlay.addEventListener('click', modalClose);
     });
   };
   getData(createErrorComment).then((data) => getFullscreen(data));
 });
-
 popup.addEventListener('click', (evt) => {
   evt.stopPropagation();
 });
-
 imgUpload.addEventListener('click', (evt) => {
   evt.stopPropagation();
 });

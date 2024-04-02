@@ -37,7 +37,6 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
-
 uploadButton.addEventListener('change', () => {
   openPopup(popup, onDocumentKeydown);
   body.classList.add('modal-open');

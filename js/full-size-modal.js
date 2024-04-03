@@ -2,8 +2,6 @@ import { isEscapeKey, openPopup, closePopup } from './util.js';
 import { pictures, createErrorComment } from './thumbnails.js';
 import { getData } from './api.js';
 
-
-const LIMIT_OF_COMMENT = 5;
 const body = document.querySelector('body');
 const bigPicture = document.querySelector('.big-picture');
 const popup = bigPicture.querySelector('.big-picture__preview');
@@ -18,6 +16,8 @@ const socialComments = bigPicture.querySelector('.social__comments');
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
 const loadMoreButton = bigPicture.querySelector('.comments-loader');
 const pictureDataFragment = document.createDocumentFragment();
+const LIMIT_OF_COMMENT = 5;
+
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();

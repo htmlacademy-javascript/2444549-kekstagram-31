@@ -1,13 +1,13 @@
 import { getNumber } from './util';
 const pictures = document.querySelector('.pictures');
-const body = document.querySelector('body');
+const bodyElement = document.querySelector('body');
 const template = document.querySelector('#picture').content;
 const templatePicture = template.querySelector('.picture');
 const templateDataError = document.querySelector('#data-error').content.querySelector('.data-error');
 const ERROR_DURATION = 5000;
 
 const createErrorComment = (() => {
-  body.append(templateDataError);
+  bodyElement.append(templateDataError);
   setTimeout(() => {
     templateDataError.remove();
   }, ERROR_DURATION);

@@ -65,7 +65,7 @@ pictures.addEventListener('click', (evt) => {
   let limit = 4;
   const createElements = createComments();
 
-  const getFullscreen = (photoData) => {
+  const getFullsize = (photoData) => {
     photoData.forEach(({ id, url, likes, description, comments }) => {
       const onLoadButtonClick = () => {
         index += LIMIT_OF_COMMENT;
@@ -98,7 +98,7 @@ pictures.addEventListener('click', (evt) => {
       overlay.addEventListener('click', modalClose);
     });
   };
-  getData(createErrorComment).then((data) => getFullscreen(data));
+  getData(createErrorComment).then((data) => getFullsize(data));
 });
 popup.addEventListener('click', (evt) => {
   evt.stopPropagation();

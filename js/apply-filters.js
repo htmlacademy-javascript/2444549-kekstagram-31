@@ -1,6 +1,6 @@
 const effectsList = document.querySelector('.effects__list');
 const effectsItems = effectsList.querySelectorAll('.effects__item');
-const picrurePreview = document.querySelector('.img-upload__preview img');
+const picturePreview = document.querySelector('.img-upload__preview img');
 const effectValue = document.querySelector('.effect-level__value');
 const effectSlider = document.querySelector('.effect-level__slider');
 const effectLevel = document.querySelector('.img-upload__effect-level');
@@ -9,8 +9,8 @@ const addCheckHandler = (effectItem) => {
   const effectsRadio = effectItem.querySelector('.effects__radio');
 
   effectsRadio.addEventListener('click', () => {
-    picrurePreview.className = '';
-    picrurePreview.classList.add(`effects__preview--${effectsRadio.value}`);
+    picturePreview.className = '';
+    picturePreview.classList.add(`effects__preview--${effectsRadio.value}`);
     effectSlider.setAttribute('disabled', true);
   });
 };
@@ -27,24 +27,24 @@ noUiSlider.create(effectSlider, {
 
 const changeLevelEffect = () => {
 
-  switch(picrurePreview.className) {
+  switch(picturePreview.className) {
     case 'effects__preview--chrome':
-      picrurePreview.style.filter = `grayscale(${effectValue.value})`;
+      picturePreview.style.filter = `grayscale(${effectValue.value})`;
       break;
     case 'effects__preview--sepia':
-      picrurePreview.style.filter = `sepia(${effectValue.value})`;
+      picturePreview.style.filter = `sepia(${effectValue.value})`;
       break;
     case 'effects__preview--marvin':
-      picrurePreview.style.filter = `invert(${effectValue.value}%)`;
+      picturePreview.style.filter = `invert(${effectValue.value}%)`;
       break;
     case 'effects__preview--heat':
-      picrurePreview.style.filter = `brightness(${effectValue.value})`;
+      picturePreview.style.filter = `brightness(${effectValue.value})`;
       break;
     case 'effects__preview--phobos':
-      picrurePreview.style.filter = `blur(${effectValue.value}px)`;
+      picturePreview.style.filter = `blur(${effectValue.value}px)`;
       break;
     case 'effects__preview--none':
-      picrurePreview.style.filter = 'none';
+      picturePreview.style.filter = 'none';
       break;
   }
 };
@@ -61,7 +61,7 @@ const changeSliderRange = (effectItem) => {
   effectLevel.style.display = 'none';
 
   effectsRadio.addEventListener('click', () =>{
-    if (picrurePreview.className === 'effects__preview--chrome' || picrurePreview.className === 'effects__preview--sepia') {
+    if (picturePreview.className === 'effects__preview--chrome' || picturePreview.className === 'effects__preview--sepia') {
       effectSlider.removeAttribute('disabled');
       effectLevel.style.display = 'block';
       effectSlider.noUiSlider.updateOptions({
@@ -72,7 +72,7 @@ const changeSliderRange = (effectItem) => {
         start: 1,
         step: 0.1,
       });
-    } else if (picrurePreview.className === 'effects__preview--marvin') {
+    } else if (picturePreview.className === 'effects__preview--marvin') {
       effectSlider.removeAttribute('disabled');
       effectLevel.style.display = 'block';
       effectSlider.noUiSlider.updateOptions({
@@ -83,7 +83,7 @@ const changeSliderRange = (effectItem) => {
         start: 100,
         step: 1,
       });
-    } else if (picrurePreview.className === 'effects__preview--heat') {
+    } else if (picturePreview.className === 'effects__preview--heat') {
       effectSlider.removeAttribute('disabled');
       effectLevel.style.display = 'block';
       effectSlider.noUiSlider.updateOptions({
@@ -94,7 +94,7 @@ const changeSliderRange = (effectItem) => {
         start: 3,
         step: 0.1,
       });
-    } else if (picrurePreview.className === 'effects__preview--phobos') {
+    } else if (picturePreview.className === 'effects__preview--phobos') {
       effectSlider.removeAttribute('disabled');
       effectLevel.style.display = 'block';
       effectSlider.noUiSlider.updateOptions({
@@ -105,7 +105,7 @@ const changeSliderRange = (effectItem) => {
         start: 3,
         step: 0.1,
       });
-    } else if (picrurePreview.className === 'effects__preview--none') {
+    } else if (picturePreview.className === 'effects__preview--none') {
       effectSlider.setAttribute('disabled', true);
       effectLevel.style.display = 'none';
       effectSlider.noUiSlider.updateOptions({

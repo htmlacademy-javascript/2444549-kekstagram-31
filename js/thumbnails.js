@@ -4,13 +4,13 @@ const body = document.querySelector('body');
 const template = document.querySelector('#picture').content;
 const templatePicture = template.querySelector('.picture');
 const templateDataError = document.querySelector('#data-error').content.querySelector('.data-error');
-const errorDuration = 5000;
+const ERROR_DURATION = 5000;
 
 const createErrorComment = (() => {
   body.append(templateDataError);
   setTimeout(() => {
     templateDataError.remove();
-  }, errorDuration);
+  }, ERROR_DURATION);
 });
 
 const renderSimilarListPictures = (photoData) => {

@@ -1,5 +1,9 @@
 import { isEscapeKey, openPopup, closePopup } from './util.js';
 import { sendData } from './api.js';
+import './apply-filters.js';
+
+const inputElement = document.querySelector('#upload-file');
+const picturePreview = document.querySelector('.img-upload__preview img');
 const body = document.querySelector('body');
 const uploadButton = document.querySelector('.img-upload__input');
 const popup = document.querySelector('.img-upload__overlay');
@@ -14,16 +18,36 @@ const templateSuccessForm = templateSuccess.querySelector('.success');
 const templateErrorForm = templateError.querySelector('.error');
 const errorButton = templateErrorForm.querySelector('.error__button');
 const successButton = templateSuccessForm.querySelector('.success__button');
+const effectsPreview = document.querySelectorAll('.effects__preview');
 
 const REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 const LIMIT_OF_HASHTAG = 5;
 const LIMIT_OF_COMMENT = 140;
+
+const IMAGE_TYPES = ['jpg', 'jpeg', 'png'];
+
+inputElement.addEventListener('change', (evt) => {
+  const file = evt.target.files[0];
+  if (!file) {
+    return;
+  }
+  const fileExtension = file.name.toLowerCase().split('.').at(-1);
+
+  const isImage = IMAGE_TYPES.includes(fileExtension);
+  if (isImage) {
+    picturePreview.src = URL.createObjectURL(file);
+    effectsPreview.forEach((el) => {
+      el.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
+    });
+  }
+});
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'information__error'
 });
+
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();

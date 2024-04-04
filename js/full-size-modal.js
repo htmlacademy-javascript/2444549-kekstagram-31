@@ -2,8 +2,6 @@ import { isEscapeKey, openPopup, closePopup } from './util.js';
 import { pictures, createErrorComment } from './thumbnails.js';
 import { getData } from './api.js';
 
-
-const LIMIT_OF_COMMENT = 5;
 const body = document.querySelector('body');
 const bigPicture = document.querySelector('.big-picture');
 const popup = bigPicture.querySelector('.big-picture__preview');
@@ -18,6 +16,8 @@ const socialComments = bigPicture.querySelector('.social__comments');
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
 const loadMoreButton = bigPicture.querySelector('.comments-loader');
 const pictureDataFragment = document.createDocumentFragment();
+const LIMIT_OF_COMMENT = 5;
+
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -65,7 +65,7 @@ pictures.addEventListener('click', (evt) => {
   let limit = 4;
   const createElements = createComments();
 
-  const getFullscreen = (photoData) => {
+  const getFullsize = (photoData) => {
     photoData.forEach(({ id, url, likes, description, comments }) => {
       const onLoadButtonClick = () => {
         index += LIMIT_OF_COMMENT;
@@ -98,7 +98,7 @@ pictures.addEventListener('click', (evt) => {
       overlay.addEventListener('click', modalClose);
     });
   };
-  getData(createErrorComment).then((data) => getFullscreen(data));
+  getData(createErrorComment).then((data) => getFullsize(data));
 });
 popup.addEventListener('click', (evt) => {
   evt.stopPropagation();

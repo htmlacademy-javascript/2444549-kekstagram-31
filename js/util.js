@@ -1,4 +1,4 @@
-const NUMBER_SYSTEM_CALCULUS = 10;
+const NUMBER_SYSTEM_CALC = 10;
 const MIN = 0;
 
 const getRandomInteger = (min, max) => {
@@ -53,7 +53,7 @@ const getNumber = (string) => {
     if (isNaN(string[i])) {
       number += '';
     } else {
-      number += parseInt(string[i], NUMBER_SYSTEM_CALCULUS);
+      number += parseInt(string[i], NUMBER_SYSTEM_CALC);
     }
   }
   if (string < MIN) {

@@ -1,11 +1,24 @@
 import { isEscapeKey, openPopup, closePopup } from './util.js';
 import { sendData } from './api.js';
-import './apply-filters.js';
+import { scaleReset } from './image-scale.js';
+
+const LIMIT_OF_HASHTAG = 5;
+const LIMIT_OF_COMMENT = 140;
+
+const REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
+
+const IMAGE_TYPES = ['jpg', 'jpeg', 'png'];
+
+const SubmitButtonTexts = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Публикуется...'
+};
 
 const inputElement = document.querySelector('#upload-file');
 const picturePreview = document.querySelector('.img-upload__preview img');
 const body = document.querySelector('body');
 const uploadButton = document.querySelector('.img-upload__input');
+const sumbitButton = document.querySelector('.img-upload__submit');
 const popup = document.querySelector('.img-upload__overlay');
 const sliderElement = document.querySelector('.effect-level__slider');
 const form = document.querySelector('.img-upload__form');
@@ -17,14 +30,22 @@ const templateError = document.querySelector('#error').content;
 const templateSuccessForm = templateSuccess.querySelector('.success');
 const templateErrorForm = templateError.querySelector('.error');
 const errorButton = templateErrorForm.querySelector('.error__button');
-const successButton = templateSuccessForm.querySelector('.success__button');
 const effectsPreview = document.querySelectorAll('.effects__preview');
+const effectSlider = document.querySelector('.effect-level__slider');
+const effectLevel = document.querySelector('.img-upload__effect-level');
 
-const REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
-const LIMIT_OF_HASHTAG = 5;
-const LIMIT_OF_COMMENT = 140;
+const pristine = new Pristine(form, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextClass: 'information__error'
+}, false);
 
-const IMAGE_TYPES = ['jpg', 'jpeg', 'png'];
+const resetAllData = () => {
+  sliderElement.noUiSlider.reset();
+  body.classList.remove('modal-open');
+  scaleReset();
+  form.reset();
+};
 
 inputElement.addEventListener('change', (evt) => {
   const file = evt.target.files[0];
@@ -39,13 +60,10 @@ inputElement.addEventListener('change', (evt) => {
     effectsPreview.forEach((el) => {
       el.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
     });
+    picturePreview.style.filter = 'none';
+    effectSlider.setAttribute('disabled', true);
+    effectLevel.style.display = 'none';
   }
-});
-
-const pristine = new Pristine(form, {
-  classTo: 'img-upload__field-wrapper',
-  errorTextParent: 'img-upload__field-wrapper',
-  errorTextClass: 'information__error'
 });
 
 const onDocumentKeydown = (evt) => {
@@ -54,23 +72,45 @@ const onDocumentKeydown = (evt) => {
     if (evt.target === hashtag || evt.target === textComment) {
       evt.stopPropagation();
     } else {
-      popup.classList.add('hidden');
-      sliderElement.noUiSlider.reset();
-      uploadButton.value = '';
+      closePopup(popup, onDocumentKeydown);
+      resetAllData();
     }
+  }
+};
+
+const addPhoto = () => {
+  const file = uploadButton.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = IMAGE_TYPES.some((element) => fileName.endsWith(element));
+  if (matches) {
+    effectsPreview.forEach((element) => {
+      element.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
+    });
+    picturePreview.src = URL.createObjectURL(file);
   }
 };
 
 uploadButton.addEventListener('change', () => {
   openPopup(popup, onDocumentKeydown);
+  effectLevel.classList.add('hidden');
   body.classList.add('modal-open');
+  addPhoto();
 });
 
 uploadButtonClose.addEventListener('click', () => {
   closePopup(popup, onDocumentKeydown);
-  sliderElement.noUiSlider.reset();
-  body.classList.remove('modal-open');
+  resetAllData();
 });
+
+const blockSubmitButton = () => {
+  sumbitButton.disabled = true;
+  sumbitButton.textContent = SubmitButtonTexts.SENDING;
+};
+
+const unblockSubmitButton = () => {
+  sumbitButton.disabled = false;
+  sumbitButton.textContent = SubmitButtonTexts.IDLE;
+};
 
 const validateHashtagName = (array) => {
   array = hashtag.value.trim().split(' ');
@@ -115,26 +155,44 @@ pristine.addValidator(
   'Превышен предел по количеству символов'
 );
 
-const createErrorForm = () => {
-  openPopup(templateErrorForm, onDocumentKeydown);
-  body.append(templateErrorForm);
+const onMessageClose = (evt) => {
+  evt.stopPropagation();
+  const existElement = document.querySelector('.success') || document.querySelector('.error');
+  const closeButton = existElement.querySelector('button');
+  if (evt.target === existElement || evt.target === closeButton || isEscapeKey(evt)) {
+    existElement.remove();
+    body.removeEventListener('click', onMessageClose);
+    body.removeEventListener('keydown', onMessageClose);
+  }
 };
 
-const createSuccess = (evt, onSuccess) => {
-  onSuccess(popup, onDocumentKeydown);
-  evt.target.reset();
-  body.append(templateSuccessForm);
+const appendMessage = (template) => {
+  const messageNode = template.cloneNode(true);
+  body.append(messageNode);
+  body.addEventListener('click', onMessageClose);
+  body.addEventListener('keydown', onMessageClose);
 };
 
-const setUserForm = (onSuccess) => {
+const setUserForm = () => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const valid = pristine.validate();
     if (valid) {
-      sendData(createErrorForm, new FormData(evt.target))
+      blockSubmitButton();
+      pristine.reset();
+      sendData(new FormData(evt.target))
         .then(() => {
-          createSuccess(evt, onSuccess);
-        });
+          appendMessage(templateSuccessForm);
+          popup.classList.add('hidden');
+          body.classList.remove('modal-open');
+          evt.target.reset();
+          sliderElement.noUiSlider.reset();
+          form.reset();
+        })
+        .catch(() => {
+          appendMessage(templateErrorForm);
+        })
+        .finally(() => unblockSubmitButton());
     }
   });
 };
@@ -144,10 +202,4 @@ errorButton.addEventListener('click', () => {
   templateErrorForm.remove();
 });
 
-successButton.addEventListener('click', () => {
-  closePopup(templateSuccessForm, onDocumentKeydown);
-  templateSuccessForm.remove();
-  sliderElement.noUiSlider.reset();
-});
-
-setUserForm(closePopup);
+setUserForm();

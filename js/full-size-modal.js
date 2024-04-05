@@ -2,6 +2,8 @@ import { isEscapeKey, openPopup, closePopup } from './util.js';
 import { pictures, createErrorComment } from './thumbnails.js';
 import { getData } from './api.js';
 
+const LIMIT_OF_COMMENT = 5;
+
 const body = document.querySelector('body');
 const bigPicture = document.querySelector('.big-picture');
 const popup = bigPicture.querySelector('.big-picture__preview');
@@ -16,11 +18,11 @@ const socialComments = bigPicture.querySelector('.social__comments');
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
 const loadMoreButton = bigPicture.querySelector('.comments-loader');
 const pictureDataFragment = document.createDocumentFragment();
-const LIMIT_OF_COMMENT = 5;
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
+    body.classList.remove('modal-open');
     bigPicture.classList.add('hidden');
   }
 };
@@ -65,14 +67,14 @@ pictures.addEventListener('click', (evt) => {
   let limit = 4;
   const createElements = createComments();
 
-  const getFullsize = (photoData) => {
+  const getFullscreen = (photoData) => {
     photoData.forEach(({ id, url, likes, description, comments }) => {
       const onLoadButtonClick = () => {
         index += LIMIT_OF_COMMENT;
         limit += LIMIT_OF_COMMENT;
         createElements(comments, index, limit);
       };
-      const modalClose = () => {
+      const onPictureClose = () => {
         closePopup(bigPicture, onDocumentKeydown);
         body.classList.remove('modal-open');
         loadMoreButton.removeEventListener('click', onLoadButtonClick);
@@ -93,16 +95,18 @@ pictures.addEventListener('click', (evt) => {
           loadMoreButton.classList.add('hidden');
         }
       }
-      closeButton.addEventListener('click', modalClose);
-      document.addEventListener('keydown', modalClose);
-      overlay.addEventListener('click', modalClose);
+      closeButton.addEventListener('click', onPictureClose);
+      document.addEventListener('keydown', onPictureClose);
+      overlay.addEventListener('click', onPictureClose);
     });
   };
-  getData(createErrorComment).then((data) => getFullsize(data));
+  getData(createErrorComment).then((data) => getFullscreen(data));
 });
+
 popup.addEventListener('click', (evt) => {
   evt.stopPropagation();
 });
+
 imgUpload.addEventListener('click', (evt) => {
   evt.stopPropagation();
 });

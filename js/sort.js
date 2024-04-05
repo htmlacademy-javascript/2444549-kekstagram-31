@@ -1,38 +1,39 @@
 import { renderSimilarListPictures } from './thumbnails.js';
 import { debounce } from './util.js';
+
 const MIN_PHOTO_COUNT = 0;
 const MAX_PHOTO_COUNT = 10;
 const NUMBER = 0.5;
-const imgFilters = document.querySelector('.img-filters');
+
+const filtersForm = document.querySelector('.img-filters__form');
+const buttonsChangeFilter = document.querySelectorAll('.img-filters__button');
 const debounceRender = debounce(renderSimilarListPictures);
-let currentFilter = 'filter-default';
-let photos = [];
 
-const addSort = () => {
-  let sortPhotos = [];
-  if (currentFilter === 'filter-default') {
-    sortPhotos = photos;
-  }
-  if (currentFilter === 'filter-random') {
-    sortPhotos = photos.toSorted(() => NUMBER - Math.random()).slice(MIN_PHOTO_COUNT, MAX_PHOTO_COUNT);
-  }
-  if (currentFilter === 'filter-discussed') {
-    sortPhotos = photos.toSorted((a,b) => b.comments.length - a.comments.length);
-  }
-  debounceRender(sortPhotos);
-};
-const onSortChange = (evt) => {
-  const activeButton = document.querySelector('.img-filters__button--active');
-  activeButton.classList.toggle('img-filters__button--active');
-  evt.target.classList.toggle('img-filters__button--active');
-  currentFilter = evt.target.getAttribute('id');
-  addSort();
+const changeFilter = (posts) => {
+
+  filtersForm.addEventListener('click',
+    (evt) => {
+      const newPosts = [...posts];
+
+      for (const btn of buttonsChangeFilter) {
+        btn.classList.remove('img-filters__button--active');
+      }
+      evt.target.classList.add('img-filters__button--active');
+
+      if(evt.target.id === 'filter-discussed') {
+        renderSimilarListPictures(newPosts.sort((a,b) => b.comments.length - a.comments.length));
+      } else if (evt.target.id === 'filter-random'){
+        debounceRender(newPosts.splice(MIN_PHOTO_COUNT,MAX_PHOTO_COUNT).sort(() => NUMBER - Math.random()));
+      } else {
+        renderSimilarListPictures(posts);
+      }
+    });
 };
 
-const adjustSort = (photoData) => {
-  imgFilters.classList.remove('img-filters--inactive');
-  imgFilters.addEventListener('click', onSortChange);
-  photos = photoData;
+const filterSort = (posts) => {
+  document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+  renderSimilarListPictures(posts);
+  changeFilter(posts);
 };
 
-export { adjustSort };
+export { filterSort };

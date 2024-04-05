@@ -10,16 +10,16 @@ const getRandomInteger = (min, max) => {
 };
 
 const getRandom = (min, max) => {
-  const array = [];
+  const integers = [];
   return function () {
     let number = getRandomInteger(min, max);
-    if (array.length >= max - min + 1) {
+    if (integers.length >= max - min + 1) {
       return null;
     }
-    while (array.includes(number)) {
+    while (integers.includes(number)) {
       number = getRandomInteger(min, max);
     }
-    array.push(number);
+    integers.push(number);
     return number;
   };
 };

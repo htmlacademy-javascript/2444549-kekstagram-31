@@ -60,7 +60,7 @@ const changeSliderRange = (effectItem) => {
   effectSlider.setAttribute('disabled', true);
   effectLevel.style.display = 'none';
 
-  effectsRadio.addEventListener('click', () =>{
+  effectsRadio.addEventListener('click', () => {
     if (picturePreview.className === 'effects__preview--chrome' || picturePreview.className === 'effects__preview--sepia') {
       effectSlider.removeAttribute('disabled');
       effectLevel.style.display = 'block';

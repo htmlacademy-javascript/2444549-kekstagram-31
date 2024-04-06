@@ -112,13 +112,13 @@ const unblockSubmitButton = () => {
   sumbitButton.textContent = SubmitButtonTexts.IDLE;
 };
 
-const validateHashtagName = (array) => {
-  array = hashtag.value.trim().split(' ');
+const validateHashtagName = (hashtags) => {
+  hashtags = hashtag.value.trim().split(' ');
   if (hashtag.value === '') {
     return true;
   }
-  for (let i = 0; i < array.length; i++) {
-    if (!REGEX.test(array[i])) {
+  for (let i = 0; i < hashtags.length; i++) {
+    if (!REGEX.test(hashtags[i])) {
       return false;
     }
   }
@@ -127,28 +127,32 @@ const validateHashtagName = (array) => {
 
 const validateHashtagAmount = () => hashtag.value.trim().split(' ').length <= LIMIT_OF_HASHTAG;
 
-const validateHashtagSimilar = (array) => {
-  const hashtagArr = array.toLowerCase().trim().split(' ');
+const validateHashtagSimilar = (hashtags) => {
+  const hashtagArr = hashtags.toLowerCase().trim().split(' ');
   const uniqueHashtags = [...new Set(hashtagArr)];
   return hashtagArr.length === uniqueHashtags.length;
 };
 
 const validateLimitOfComment = () => textComment.value.length <= LIMIT_OF_COMMENT;
+
 pristine.addValidator(
   hashtag,
   validateHashtagName,
   'Неправильно введен хэштег'
 );
+
 pristine.addValidator(
   hashtag,
   validateHashtagAmount,
   'Превышен лимит хэштегов. Максимум 5 доступно'
 );
+
 pristine.addValidator(
   hashtag,
   validateHashtagSimilar,
   'Нельзя использовать один и тот же хэштег дважды'
 );
+
 pristine.addValidator(
   textComment,
   validateLimitOfComment,
@@ -188,6 +192,7 @@ const setUserForm = () => {
           evt.target.reset();
           sliderElement.noUiSlider.reset();
           form.reset();
+          resetAllData();
         })
         .catch(() => {
           appendMessage(templateErrorForm);

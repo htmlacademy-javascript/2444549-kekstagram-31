@@ -10,16 +10,16 @@ const getRandomInteger = (min, max) => {
 };
 
 const getRandom = (min, max) => {
-  const integers = [];
+  const numbers = [];
   return function () {
     let number = getRandomInteger(min, max);
-    if (integers.length >= max - min + 1) {
+    if (numbers.length >= max - min + 1) {
       return null;
     }
-    while (integers.includes(number)) {
+    while (numbers.includes(number)) {
       number = getRandomInteger(min, max);
     }
-    integers.push(number);
+    numbers.push(number);
     return number;
   };
 };
@@ -28,23 +28,24 @@ const getRandomArrayElement = (elements) => elements[getRandomInteger(0, element
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const openPopup = (popup, onDocumentKeydown) => {
+const openPopup = (popup, closeWindowOnKeydown) => {
   popup.classList.remove('hidden');
-  document.addEventListener('keydown', onDocumentKeydown);
+  document.addEventListener('keydown', closeWindowOnKeydown);
 };
 
-const closePopup = (popup, onDocumentKeydown) => {
+const closePopup = (popup, closeWindowOnKeydown) => {
   popup.classList.add('hidden');
-  document.removeEventListener('keydown', onDocumentKeydown);
+  document.removeEventListener('keydown', closeWindowOnKeydown);
 };
 
-const debounce = (callback, timeoutDelay) => {
+function setDebounce(callback, timeoutDelay = 500) {
   let timeoutId;
+
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-};
+}
 
 const getNumber = (string) => {
   let number = '';
@@ -62,4 +63,4 @@ const getNumber = (string) => {
   return (number === '') ? 'NaN' : number;
 };
 
-export { getRandomInteger, getRandom, isEscapeKey, openPopup, closePopup, getRandomArrayElement, debounce, getNumber };
+export { getRandomInteger, getRandom, isEscapeKey, openPopup, closePopup, getRandomArrayElement, setDebounce, getNumber };

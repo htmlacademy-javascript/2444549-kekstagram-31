@@ -19,7 +19,7 @@ const closeButton = bigPicture.querySelector('.big-picture__cancel');
 const loadMoreButton = bigPicture.querySelector('.comments-loader');
 const pictureDataFragment = document.createDocumentFragment();
 
-const onDocumentKeydown = (evt) => {
+const closeWindowOnKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     body.classList.remove('modal-open');
@@ -69,15 +69,15 @@ pictures.addEventListener('click', (evt) => {
 
   const getFullscreen = (photoData) => {
     photoData.forEach(({ id, url, likes, description, comments }) => {
-      const onLoadButtonClick = () => {
+      const loadButtonClick = () => {
         index += LIMIT_OF_COMMENT;
         limit += LIMIT_OF_COMMENT;
         createElements(comments, index, limit);
       };
-      const onPictureClose = () => {
-        closePopup(bigPicture, onDocumentKeydown);
+      const closePicture = () => {
+        closePopup(bigPicture, closeWindowOnKeydown);
         body.classList.remove('modal-open');
-        loadMoreButton.removeEventListener('click', onLoadButtonClick);
+        loadMoreButton.removeEventListener('click', loadButtonClick);
       };
       if (Number(evt.target.closest('.picture').dataset.id) === id) {
         image.children[0].src = url;
@@ -87,17 +87,18 @@ pictures.addEventListener('click', (evt) => {
         body.classList.add('modal-open');
         socialComments.innerHTML = '';
         createElements(comments, index, limit);
-        openPopup(bigPicture, onDocumentKeydown);
+        openPopup(bigPicture, closeWindowOnKeydown);
         if (comments.length > LIMIT_OF_COMMENT) {
           loadMoreButton.classList.remove('hidden');
-          loadMoreButton.addEventListener('click', onLoadButtonClick);
+          loadMoreButton.addEventListener('click', loadButtonClick);
         } else {
           loadMoreButton.classList.add('hidden');
+          loadMoreButton.removeEventListener('click', loadButtonClick);
         }
       }
-      closeButton.addEventListener('click', onPictureClose);
-      document.addEventListener('keydown', onPictureClose);
-      overlay.addEventListener('click', onPictureClose);
+      closeButton.addEventListener('click', closePicture);
+      document.addEventListener('keydown', closePicture);
+      overlay.addEventListener('click', closePicture);
     });
   };
   getData(createErrorComment).then((data) => getFullscreen(data));

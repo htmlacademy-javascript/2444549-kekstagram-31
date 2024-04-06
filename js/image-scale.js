@@ -1,4 +1,4 @@
-const MIN_LIMIT = 0;
+const MIN_LIMIT = 25;
 const MAX_LIMIT = 100;
 const STEP = 25;
 

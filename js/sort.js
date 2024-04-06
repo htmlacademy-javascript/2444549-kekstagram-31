@@ -1,5 +1,5 @@
 import { renderSimilarListPictures } from './thumbnails.js';
-import { debounce } from './util.js';
+import { setDebounce } from './util.js';
 
 const MIN_PHOTO_COUNT = 0;
 const MAX_PHOTO_COUNT = 10;
@@ -7,7 +7,7 @@ const NUMBER = 0.5;
 
 const filtersForm = document.querySelector('.img-filters__form');
 const buttonsChangeFilter = document.querySelectorAll('.img-filters__button');
-const debounceRender = debounce(renderSimilarListPictures);
+const debounceRender = setDebounce(renderSimilarListPictures);
 
 const changeFilter = (posts) => {
 
@@ -21,11 +21,11 @@ const changeFilter = (posts) => {
       evt.target.classList.add('img-filters__button--active');
 
       if(evt.target.id === 'filter-discussed') {
-        renderSimilarListPictures(newPosts.sort((a,b) => b.comments.length - a.comments.length));
+        debounceRender(newPosts.sort((a,b) => b.comments.length - a.comments.length));
       } else if (evt.target.id === 'filter-random'){
         debounceRender(newPosts.splice(MIN_PHOTO_COUNT,MAX_PHOTO_COUNT).sort(() => NUMBER - Math.random()));
       } else {
-        renderSimilarListPictures(posts);
+        debounceRender(posts);
       }
     });
 };

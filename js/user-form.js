@@ -7,7 +7,7 @@ const LIMIT_OF_COMMENT = 140;
 
 const REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 
-const IMAGE_TYPES = ['jpg', 'jpeg', 'png'];
+const IMAGES_FORMAT = ['jpg', 'jpeg', 'png'];
 
 const SubmitButtonTexts = {
   IDLE: 'Опубликовать',
@@ -54,7 +54,7 @@ inputElement.addEventListener('change', (evt) => {
   }
   const fileExtension = file.name.toLowerCase().split('.').at(-1);
 
-  const isImage = IMAGE_TYPES.includes(fileExtension);
+  const isImage = IMAGES_FORMAT.includes(fileExtension);
   if (isImage) {
     picturePreview.src = URL.createObjectURL(file);
     effectsPreview.forEach((el) => {
@@ -81,7 +81,7 @@ const onDocumentKeydown = (evt) => {
 const addPhoto = () => {
   const file = uploadButton.files[0];
   const fileName = file.name.toLowerCase();
-  const matches = IMAGE_TYPES.some((element) => fileName.endsWith(element));
+  const matches = IMAGES_FORMAT.some((element) => fileName.endsWith(element));
   if (matches) {
     effectsPreview.forEach((element) => {
       element.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
@@ -129,8 +129,8 @@ const validateHashtagAmount = () => hashtag.value.trim().split(' ').length <= LI
 
 const validateHashtagSimilar = (hashtags) => {
   const hashtagArr = hashtags.toLowerCase().trim().split(' ');
-  const uniqueHashtags = [...new Set(hashtagArr)];
-  return hashtagArr.length === uniqueHashtags.length;
+  const tags = [...new Set(hashtagArr)];
+  return hashtagArr.length === tags.length;
 };
 
 const validateLimitOfComment = () => textComment.value.length <= LIMIT_OF_COMMENT;
@@ -159,22 +159,22 @@ pristine.addValidator(
   'Превышен предел по количеству символов'
 );
 
-const onMessageClose = (evt) => {
+const closeMessage = (evt) => {
   evt.stopPropagation();
   const existElement = document.querySelector('.success') || document.querySelector('.error');
   const closeButton = existElement.querySelector('button');
   if (evt.target === existElement || evt.target === closeButton || isEscapeKey(evt)) {
     existElement.remove();
-    body.removeEventListener('click', onMessageClose);
-    body.removeEventListener('keydown', onMessageClose);
+    body.removeEventListener('click', closeMessage);
+    body.removeEventListener('keydown', closeMessage);
   }
 };
 
 const appendMessage = (template) => {
   const messageNode = template.cloneNode(true);
   body.append(messageNode);
-  body.addEventListener('click', onMessageClose);
-  body.addEventListener('keydown', onMessageClose);
+  body.addEventListener('click', closeMessage);
+  body.addEventListener('keydown', closeMessage);
 };
 
 const setUserForm = () => {
@@ -193,6 +193,7 @@ const setUserForm = () => {
           sliderElement.noUiSlider.reset();
           form.reset();
           resetAllData();
+          form.removeEventListener('submit', addPhoto);
         })
         .catch(() => {
           appendMessage(templateErrorForm);

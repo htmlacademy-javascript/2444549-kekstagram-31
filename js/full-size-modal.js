@@ -77,7 +77,6 @@ pictures.addEventListener('click', (evt) => {
       const closePicture = () => {
         closePopup(bigPicture, closeWindowOnKeydown);
         body.classList.remove('modal-open');
-        loadMoreButton.removeEventListener('click', loadButtonClick);
       };
       if (Number(evt.target.closest('.picture').dataset.id) === id) {
         image.children[0].src = url;

@@ -74,6 +74,7 @@ const onDocumentKeydown = (evt) => {
     } else {
       closePopup(popup, onDocumentKeydown);
       resetAllData();
+      document.removeEventListener('keydown', onDocumentKeydown);
     }
   }
 };
@@ -99,6 +100,7 @@ uploadButton.addEventListener('change', () => {
 
 uploadButtonClose.addEventListener('click', () => {
   closePopup(popup, onDocumentKeydown);
+  form.removeEventListener('submit', addPhoto);
   resetAllData();
 });
 
@@ -180,8 +182,9 @@ const appendMessage = (template) => {
 const setUserForm = () => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    const valid = pristine.validate();
-    if (valid) {
+    const isValid = pristine.validate();
+    if (isValid) {
+      hashtag.value = hashtag.value.trim().replaceAll(/\s+/g,' ');
       blockSubmitButton();
       pristine.reset();
       sendData(new FormData(evt.target))
